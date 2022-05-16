@@ -1,21 +1,25 @@
 package me.fdulger.hellolmdb.persist.lmdb
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import me.fdulger.hellolmdb.Device
+import me.fdulger.hellolmdb.model.Device
 import me.fdulger.hellolmdb.persist.DeviceRepository
 import org.lmdbjava.Dbi
 import org.lmdbjava.DbiFlags
 import org.lmdbjava.Env
 import org.lmdbjava.KeyRange
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
+import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
-import java.nio.file.Path
 import javax.annotation.PreDestroy
 
 @Component
-@Qualifier("lmdb")
+@ConditionalOnProperty(
+    value= ["app.lmdb.enabled"],
+    havingValue = "true",
+    matchIfMissing = false
+)
 class DeviceLMDBRepository : DeviceRepository {
 
     private val DB_NAME = "deviceDB"
@@ -25,7 +29,7 @@ class DeviceLMDBRepository : DeviceRepository {
     private val db: Dbi<ByteBuffer>
 
     init {
-        val file = Path.of("database").toFile()
+        val file = File("lmdb")
         if(!file.exists()) file.mkdir()
         env = Env.create()
             .setMapSize(10485760)
@@ -76,9 +80,10 @@ class DeviceLMDBRepository : DeviceRepository {
 
     private fun Device.asValue(): ByteBuffer {
         val deviceJson = this.convert()
-        return ByteBuffer.allocateDirect(deviceJson.length)
-            .put(deviceJson.toByteArray())
-            .flip()
+        val res = ByteBuffer.allocateDirect(deviceJson.length)
+        res.put(deviceJson.toByteArray())
+        res.flip()
+        return res
     }
 
     private fun ByteBuffer.decode(): String {

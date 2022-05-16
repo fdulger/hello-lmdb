@@ -1,4 +1,4 @@
-package me.fdulger.hellolmdb
+package me.fdulger.hellolmdb.model
 
 data class Device(
     val id: Int,

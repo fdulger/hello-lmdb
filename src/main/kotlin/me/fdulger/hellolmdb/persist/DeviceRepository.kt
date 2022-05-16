@@ -1,6 +1,7 @@
 package me.fdulger.hellolmdb.persist
 
-import me.fdulger.hellolmdb.Device
+import me.fdulger.hellolmdb.model.Device
+import org.springframework.stereotype.Component
 
 interface DeviceRepository {
 

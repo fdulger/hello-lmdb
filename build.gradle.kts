@@ -24,6 +24,8 @@ dependencies {
     implementation("com.h2database:h2")
 
     implementation("org.lmdbjava:lmdbjava:0.8.1")
+    implementation("org.mapdb:mapdb:3.0.8")
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
@@ -31,7 +33,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 }
 

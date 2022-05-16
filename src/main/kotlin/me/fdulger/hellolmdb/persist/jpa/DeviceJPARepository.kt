@@ -1,14 +1,23 @@
-package me.fdulger.hellolmdb
+package me.fdulger.hellolmdb.persist.jpa
 
+import me.fdulger.hellolmdb.model.Device
+import me.fdulger.hellolmdb.model.Service
+import me.fdulger.hellolmdb.model.ServiceType
 import me.fdulger.hellolmdb.persist.DeviceRepository
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import javax.persistence.*
 
 
-@Repository
-@Qualifier("jpa")
+@Component
+@ConditionalOnProperty(
+    value= ["app.jpa.enabled"],
+    havingValue = "true",
+    matchIfMissing = false
+)
 class DeviceJPARepository(
     private val deviceJPARepositoryInternal: DeviceJPARepositoryInternal
 ) : DeviceRepository {
